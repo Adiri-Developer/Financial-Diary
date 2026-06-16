@@ -20,7 +20,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $totalBalance = $user->wallets->sum('balance');
         $incomeThisMonth = $user->transactions()->where('type', 'income')->whereMonth('date', date('m'))->sum('amount');
         $outcomeThisMonth = $user->transactions()->where('type', 'outcome')->whereMonth('date', date('m'))->sum('amount');
-        return view('dashboard', compact('totalBalance', 'incomeThisMonth', 'outcomeThisMonth'));
+        return \Inertia\Inertia::render('Dashboard', compact('totalBalance', 'incomeThisMonth', 'outcomeThisMonth'));
     })->name('dashboard');
 
     Route::resource('transactions', TransactionController::class);

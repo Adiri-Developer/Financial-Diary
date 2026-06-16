@@ -19,15 +19,18 @@ class HermesChatController extends Controller
         ]);
 
         try {
-            $response = Http::withHeaders([
+            $userIdentifier = auth()->check() ? \Illuminate\Support\Str::slug(auth()->user()->name) : 'guest';
+
+            $response = Http::withoutVerifying()->withHeaders([
                 'Authorization' => 'Bearer hermes_api_secret_key_you_can_change_this',
                 'Content-Type' => 'application/json',
+                'X-Hermes-Session-Key' => $userIdentifier,
             ])->post('https://chatbot.adiri.my.id/v1/chat/completions', [
-                'model' => 'hermes-agent',
-                'messages' => [
-                    ['role' => 'user', 'content' => $request->input('message')]
-                ],
-            ]);
+                        'model' => 'hermes-agent',
+                        'messages' => [
+                            ['role' => 'user', 'content' => $request->input('message')]
+                        ]
+                    ]);
 
             $data = $response->json();
             $reply = $data['choices'][0]['message']['content'] ?? 'Maaf, saya tidak mengerti.';

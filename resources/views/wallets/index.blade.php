@@ -1,11 +1,11 @@
 <x-app-layout>
-    <div x-data="{ showWalletModal: false, showAssetModal: false, showDebtModal: false }">
+    <div x-data="{ showWalletModal: false, showAssetModal: false, showDebtModal: false }" @open-wallet.window="showWalletModal = true">
         <x-slot name="header">
-            <div class="flex justify-between items-center">
+            <div x-data class="flex justify-between items-center">
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                     {{ __('Accounts & Assets') }}
                 </h2>
-                <button @click="showWalletModal = true" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-150">
+                <button @click="$dispatch('open-wallet')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-150">
                     + Add Wallet
                 </button>
             </div>

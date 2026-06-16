@@ -1,8 +1,13 @@
 <x-guest-layout>
+    <div class="mb-8">
+        <h2 class="text-3xl font-bold text-gray-900">Welcome Back</h2>
+        <p class="text-gray-500 mt-2">Please sign in to your account to continue.</p>
+    </div>
+
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}">
+    <form method="POST" action="{{ route('login') }}" class="space-y-6">
         @csrf
 
         <!-- Email Address -->
@@ -32,16 +37,24 @@
             </label>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
+        <div class="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0 mt-6">
+            <div class="flex items-center space-x-4">
+                <x-primary-button>
+                    {{ __('Log in') }}
+                </x-primary-button>
+                @if (Route::has('password.request'))
+                    <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
+                        {{ __('Forgot password?') }}
+                    </a>
+                @endif
+            </div>
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
+            <div class="text-sm text-gray-600">
+                Don't have an account? 
+                <a href="{{ route('register') }}" class="font-semibold text-indigo-600 hover:text-indigo-500 underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Sign up
+                </a>
+            </div>
         </div>
     </form>
 </x-guest-layout>

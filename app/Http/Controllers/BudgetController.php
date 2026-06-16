@@ -12,11 +12,13 @@ class BudgetController extends Controller
 {
     public function index()
     {
-        $budgets = Auth::user()->budgets()->with('category')->get();
+        $budgets = Auth::user()->budgets;
         $goals = Auth::user()->financialGoals;
         $categories = Auth::user()->categories()->where('type', 'outcome')->get();
 
-        return view('budgets.index', compact('budgets', 'goals', 'categories'));
+        $budgets->load('category');
+
+        return \Inertia\Inertia::render('Budgets/Index', compact('budgets', 'categories', 'goals'));
     }
 
     public function store(Request $request)

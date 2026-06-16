@@ -16,7 +16,7 @@ class WalletController extends Controller
         $assets = Auth::user()->assets;
         $debts = Auth::user()->debts;
 
-        return view('wallets.index', compact('wallets', 'assets', 'debts'));
+        return \Inertia\Inertia::render('Wallets/Index', compact('wallets', 'assets', 'debts'));
     }
 
     public function store(Request $request)

@@ -11,13 +11,16 @@ use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $transactions = Auth::user()->transactions()->with(['category', 'fromWallet', 'toWallet'])->orderBy('date', 'desc')->get();
         $categories = Auth::user()->categories;
         $wallets = Auth::user()->wallets;
+        $action = $request->query('action');
+        
+        $transactions->load('category', 'fromWallet', 'toWallet');
 
-        return view('transactions.index', compact('transactions', 'categories', 'wallets'));
+        return \Inertia\Inertia::render('Transactions/Index', compact('transactions', 'wallets', 'categories', 'action'));
     }
 
     public function store(Request $request)

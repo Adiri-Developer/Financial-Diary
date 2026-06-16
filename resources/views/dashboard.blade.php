@@ -60,14 +60,14 @@
                 <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100">
                     <h3 class="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h3>
                     <div class="space-y-4">
-                        <button class="w-full flex items-center justify-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-xl transition duration-200">
+                        <a href="{{ route('transactions.index', ['action' => 'income']) }}" class="w-full flex items-center justify-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-xl transition duration-200">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                             <span>Add Income</span>
-                        </button>
-                        <button class="w-full flex items-center justify-center space-x-2 bg-rose-500 hover:bg-rose-600 text-white py-3 px-4 rounded-xl transition duration-200">
+                        </a>
+                        <a href="{{ route('transactions.index', ['action' => 'outcome']) }}" class="w-full flex items-center justify-center space-x-2 bg-rose-500 hover:bg-rose-600 text-white py-3 px-4 rounded-xl transition duration-200">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
                             <span>Add Outcome</span>
-                        </button>
+                        </a>
                     </div>
 
                     <div class="mt-8">

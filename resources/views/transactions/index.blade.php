@@ -1,15 +1,15 @@
 <x-app-layout>
-    <div x-data="{ showIncomeModal: false, showOutcomeModal: false }">
+    <div x-data="{ showIncomeModal: {{ request('action') == 'income' ? 'true' : 'false' }}, showOutcomeModal: {{ request('action') == 'outcome' ? 'true' : 'false' }} }" @open-income.window="showIncomeModal = true" @open-outcome.window="showOutcomeModal = true">
         <x-slot name="header">
-            <div class="flex justify-between items-center">
+            <div x-data class="flex justify-between items-center">
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                     {{ __('Transactions') }}
                 </h2>
                 <div class="space-x-2">
-                    <button @click="showOutcomeModal = true" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-150 shadow-sm">
+                    <button @click="$dispatch('open-outcome')" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-150 shadow-sm">
                         - Outcome
                     </button>
-                    <button @click="showIncomeModal = true" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-150 shadow-sm">
+                    <button @click="$dispatch('open-income')" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-150 shadow-sm">
                         + Income
                     </button>
                 </div>
