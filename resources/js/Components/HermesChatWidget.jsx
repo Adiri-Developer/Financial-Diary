@@ -10,7 +10,7 @@ export default function HermesChatWidget() {
     const [messages, setMessages] = useState(() => {
         const saved = sessionStorage.getItem('hermes_messages');
         return saved ? JSON.parse(saved) : [
-            { role: 'bot', text: 'Halo! Saya Hermes ✨\nAsisten finansial Anda. Ketik pengeluaran atau pemasukan hari ini, atau tanyakan ringkasan keuangan Anda!' }
+            { role: 'bot', text: 'Halo! Saya Adiri ✨\nAsisten finansial Anda. Ketik pengeluaran atau pemasukan hari ini, atau tanyakan ringkasan keuangan Anda!' }
         ];
     });
 
@@ -95,7 +95,7 @@ export default function HermesChatWidget() {
                                 <span className="text-indigo-600 dark:text-indigo-400 font-bold text-sm">H</span>
                             </div>
                             <div>
-                                <h3 className="font-semibold text-gray-800 dark:text-gray-100 text-sm">Hermes Assistant</h3>
+                                <h3 className="font-semibold text-gray-800 dark:text-gray-100 text-sm">Adiri Assistant</h3>
                                 <div className="flex items-center text-xs text-green-500 dark:text-green-400">
                                     <span className="w-2 h-2 rounded-full bg-green-500 dark:bg-green-400 mr-1"></span>
                                     Online

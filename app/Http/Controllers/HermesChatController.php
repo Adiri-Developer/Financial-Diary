@@ -19,21 +19,40 @@ class HermesChatController extends Controller
         ]);
 
         try {
-            $userIdentifier = auth()->check() ? \Illuminate\Support\Str::slug(auth()->user()->name) : 'guest';
+            $user = auth()->check() ? auth()->user() : null;
+            $userIdentifier = $user ? \Illuminate\Support\Str::slug($user->name) : 'guest';
+            
+            $webhookUrl = env('N8N_WEBHOOK_URL');
 
-            $response = Http::withoutVerifying()->withHeaders([
-                'Authorization' => 'Bearer hermes_api_secret_key_you_can_change_this',
+            $http = Http::withoutVerifying();
+            
+            if (env('N8N_BASIC_AUTH_USER') && env('N8N_BASIC_AUTH_PASSWORD')) {
+                $http = $http->withBasicAuth(env('N8N_BASIC_AUTH_USER'), env('N8N_BASIC_AUTH_PASSWORD'));
+            }
+
+            $response = $http->withHeaders([
                 'Content-Type' => 'application/json',
-                'X-Hermes-Session-Key' => $userIdentifier,
-            ])->post('https://chatbot.adiri.my.id/v1/chat/completions', [
-                        'model' => 'hermes-agent',
-                        'messages' => [
-                            ['role' => 'user', 'content' => $request->input('message')]
-                        ]
-                    ]);
+                'X-Hermes-Session-Key' => session()->getId(),
+            ])->post($webhookUrl, [
+                // Format required by n8n "When chat message received" trigger
+                'action' => 'sendMessage',
+                'sessionId' => session()->getId(),
+                'chatInput' => $request->input('message'),
+                
+                // Extra metadata we send
+                'metadata' => [
+                    'user_id' => $user ? $user->id : null,
+                    'user_name' => $user ? $user->name : 'guest',
+                    'email' => $user ? $user->email : null,
+                ]
+            ]);
 
             $data = $response->json();
-            $reply = $data['choices'][0]['message']['content'] ?? 'Maaf, saya tidak mengerti.';
+            
+            \Illuminate\Support\Facades\Log::info('N8N Response: ', (array) $data);
+            
+            // n8n Chat node usually returns the reply in the `output` or `text` field
+            $reply = $data['output'] ?? $data['text'] ?? $data['reply'] ?? $data['choices'][0]['message']['content'] ?? 'Maaf, saya tidak mengerti. response: ' . json_encode($data);
 
             return response()->json([
                 'status' => 'success',

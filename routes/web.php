@@ -37,6 +37,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/profile/send-otp', [\App\Http\Controllers\OtpController::class, 'send'])->name('profile.send-otp');
+    Route::post('/profile/verify-otp', [\App\Http\Controllers\OtpController::class, 'verify'])->name('profile.verify-otp');
+});
+
+Route::get('/api/regions/provinces', function () {
+    return \Illuminate\Support\Facades\Http::withoutVerifying()->get('https://emsifa.github.io/api-wilayah-indonesia/api/provinces.json')->json();
+});
+Route::get('/api/regions/regencies/{id}', function ($id) {
+    return \Illuminate\Support\Facades\Http::withoutVerifying()->get("https://emsifa.github.io/api-wilayah-indonesia/api/regencies/{$id}.json")->json();
+});
+Route::get('/api/regions/districts/{id}', function ($id) {
+    return \Illuminate\Support\Facades\Http::withoutVerifying()->get("https://emsifa.github.io/api-wilayah-indonesia/api/districts/{$id}.json")->json();
 });
 
 require __DIR__.'/auth.php';

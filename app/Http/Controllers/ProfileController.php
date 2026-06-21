@@ -27,13 +27,15 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $validated = $request->validated();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+        // Prevent updating email and phone here, they are updated via OTP
+        unset($validated['email']);
+        unset($validated['phone_number']);
 
-        $request->user()->save();
+        $user->fill($validated);
+        $user->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

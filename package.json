@@ -22,6 +22,7 @@
         "@inertiajs/react": "^3.4.0",
         "@vitejs/plugin-react": "^6.0.2",
         "react": "^19.2.7",
-        "react-dom": "^19.2.7"
+        "react-dom": "^19.2.7",
+        "sweetalert2": "^11.26.25"
     }
 }

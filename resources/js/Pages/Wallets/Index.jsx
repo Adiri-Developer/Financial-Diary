@@ -90,7 +90,7 @@ export default function WalletsIndex({ wallets, assets, debts }) {
                                     <h4 className="text-2xl font-bold">{formatCurrency(wallet.balance)}</h4>
                                 </div>
                             )) : (
-                                <div className="col-span-3 text-center py-8 text-gray-500 bg-white rounded-2xl shadow-sm border border-gray-100">
+                                <div className="col-span-3 text-center py-8 text-gray-500 dark:text-gray-400 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
                                     No wallets added yet. Click "+ Add Wallet" to create one.
                                 </div>
                             )}
@@ -100,53 +100,53 @@ export default function WalletsIndex({ wallets, assets, debts }) {
                     {/* Assets & Debts List */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
                         {/* Assets */}
-                        <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                        <section className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 p-6">
                             <div className="flex justify-between items-center mb-6">
-                                <h3 className="text-lg font-bold text-gray-800">Assets</h3>
-                                <button onClick={() => setShowAssetModal(true)} className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">+ Add Asset</button>
+                                <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">Assets</h3>
+                                <button onClick={() => setShowAssetModal(true)} className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-sm font-medium">+ Add Asset</button>
                             </div>
-                            <ul className="divide-y divide-gray-100">
+                            <ul className="divide-y divide-gray-100 dark:divide-slate-700">
                                 {assets.length > 0 ? assets.map(asset => (
                                     <li key={asset.id} className="py-3 flex justify-between items-center">
                                         <div className="flex items-center space-x-3">
-                                            <div className="bg-yellow-100 p-2 rounded-lg text-yellow-600">
+                                            <div className="bg-yellow-100 dark:bg-yellow-900/50 p-2 rounded-lg text-yellow-600 dark:text-yellow-500">
                                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                             </div>
                                             <div>
-                                                <p className="text-sm font-medium text-gray-800">{asset.name}</p>
-                                                <p className="text-xs text-gray-500">Purchased: {formatDate(asset.purchase_date)}</p>
+                                                <p className="text-sm font-medium text-gray-800 dark:text-gray-200">{asset.name}</p>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400">Purchased: {formatDate(asset.purchase_date)}</p>
                                             </div>
                                         </div>
-                                        <span className="font-semibold text-gray-800">{formatCurrency(asset.value)}</span>
+                                        <span className="font-semibold text-gray-800 dark:text-gray-200">{formatCurrency(asset.value)}</span>
                                     </li>
                                 )) : (
-                                    <li className="py-4 text-center text-sm text-gray-500">No assets found.</li>
+                                    <li className="py-4 text-center text-sm text-gray-500 dark:text-gray-400">No assets found.</li>
                                 )}
                             </ul>
                         </section>
 
                         {/* Debts */}
-                        <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                        <section className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 p-6">
                             <div className="flex justify-between items-center mb-6">
-                                <h3 className="text-lg font-bold text-gray-800">Debts & Loans</h3>
-                                <button onClick={() => setShowDebtModal(true)} className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">+ Add Debt</button>
+                                <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">Debts & Loans</h3>
+                                <button onClick={() => setShowDebtModal(true)} className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 text-sm font-medium">+ Add Debt</button>
                             </div>
-                            <ul className="divide-y divide-gray-100">
+                            <ul className="divide-y divide-gray-100 dark:divide-slate-700">
                                 {debts.length > 0 ? debts.map(debt => (
                                     <li key={debt.id} className="py-3 flex justify-between items-center">
                                         <div className="flex items-center space-x-3">
-                                            <div className="bg-red-100 p-2 rounded-lg text-red-600">
+                                            <div className="bg-red-100 dark:bg-red-900/30 p-2 rounded-lg text-red-600 dark:text-red-400">
                                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                             </div>
                                             <div>
-                                                <p className="text-sm font-medium text-gray-800">{debt.name}</p>
-                                                <p className="text-xs text-gray-500">Due: {formatDate(debt.due_date)}</p>
+                                                <p className="text-sm font-medium text-gray-800 dark:text-gray-200">{debt.name}</p>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400">Due: {formatDate(debt.due_date)}</p>
                                             </div>
                                         </div>
-                                        <span className="font-semibold text-red-600">- {formatCurrency(debt.amount)}</span>
+                                        <span className="font-semibold text-red-600 dark:text-red-400">- {formatCurrency(debt.amount)}</span>
                                     </li>
                                 )) : (
-                                    <li className="py-4 text-center text-sm text-gray-500">No debts found.</li>
+                                    <li className="py-4 text-center text-sm text-gray-500 dark:text-gray-400">No debts found.</li>
                                 )}
                             </ul>
                         </section>
