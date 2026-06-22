@@ -1,0 +1,89 @@
+name: CI/CD Pipeline Laravel
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # JOB 1: Dijalankan di server GitHub (Pembungkusan Docker)
+  docker-build-and-push:
+    name: Docker Build and Push
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+          
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/financial-diary:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # JOB 2: Dijalankan LANGSUNG di server self-hosted kamu
+  deploy:
+    name: Deploy to Server
+    needs: docker-build-and-push
+    runs-on: self-hosted
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Pull and Run Docker Container
+        run: |
+          echo "Menarik image terbaru dari DockerHub..."
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/financial-diary:latest
+
+          echo "Menghentikan dan menghapus container lama (jika ada)..."
+          docker stop financial-diary || true
+          docker rm financial-diary || true
+
+          echo "Membersihkan image lama yang menggantung..."
+          docker image prune -f
+
+          echo "Menjalankan container baru..."
+          # Pastikan file .env ada di direktori server tempat runner berjalan
+          # Volume mapping untuk storage agar file upload tidak hilang saat deploy ulang
+          docker run -d \
+            --name financial-diary \
+            -p 8080:8080 \
+            --env-file /var/www/financial-diary/.env \
+            -v /var/www/financial-diary/storage:/app/storage \
+            ${{ secrets.DOCKERHUB_USERNAME }}/financial-diary:latest
+
+  # JOB 3: Mengirimkan Notifikasi ke Discord
+  notify:
+    name: Discord Notification
+    needs: [docker-build-and-push, deploy]
+    if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Success Notification
+        if: ${{ needs.deploy.result == 'success' }}
+        run: |
+          curl -H "Content-Type: application/json" \
+          -d '{"embeds": [{"title": "✅ Deployment Berhasil!", "description": "Aplikasi **Financial Diary (Laravel)** telah berhasil di-deploy ke server dengan sukses.", "color": 65280}]}' \
+          ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+      - name: Send Failure Notification
+        if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
+        run: |
+          curl -H "Content-Type: application/json" \
+          -d '{"embeds": [{"title": "❌ Deployment Gagal", "description": "Terjadi kesalahan saat mem-build atau men-deploy **Financial Diary**. Silakan cek log GitHub Actions untuk detailnya.", "color": 16711680}]}' \
+          ${{ secrets.DISCORD_WEBHOOK_URL }}
