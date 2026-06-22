@@ -1,5 +1,9 @@
 #!/bin/sh
 
+echo "Ensure storage directories exist..."
+mkdir -p storage/framework/views storage/framework/cache/data storage/framework/sessions storage/logs storage/app/public
+chmod -R 775 storage bootstrap/cache
+
 echo "Caching configuration..."
 php artisan config:cache
 
