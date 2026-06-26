@@ -39,6 +39,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/profile/send-otp', [\App\Http\Controllers\OtpController::class, 'send'])->name('profile.send-otp');
     Route::post('/profile/verify-otp', [\App\Http\Controllers\OtpController::class, 'verify'])->name('profile.verify-otp');
+    
+    // Telegram Routes
+    Route::get('/profile/telegram/callback', [\App\Http\Controllers\TelegramAuthController::class, 'handleCallback'])->name('telegram.callback');
+    Route::post('/profile/telegram/unlink', [\App\Http\Controllers\TelegramAuthController::class, 'unlink'])->name('telegram.unlink');
 });
 
 Route::get('/api/regions/provinces', function () {

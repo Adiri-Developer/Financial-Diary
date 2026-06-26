@@ -4,6 +4,28 @@ import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
+const TelegramLoginWidget = ({ botName }) => {
+    const containerRef = useRef(null);
+
+    useEffect(() => {
+        if (!containerRef.current || !botName) return;
+        containerRef.current.innerHTML = '';
+        
+        const script = document.createElement('script');
+        script.src = 'https://telegram.org/js/telegram-widget.js?22';
+        script.setAttribute('data-telegram-login', botName);
+        script.setAttribute('data-size', 'large');
+        script.setAttribute('data-radius', '10');
+        script.setAttribute('data-request-access', 'write');
+        script.setAttribute('data-auth-url', route('telegram.callback'));
+        
+        script.async = true;
+        containerRef.current.appendChild(script);
+    }, [botName]);
+
+    return <div ref={containerRef}></div>;
+};
+
 const PasswordInput = ({ id, value, onChange, className }) => {
     const [show, setShow] = useState(false);
     return (
@@ -97,7 +119,7 @@ const OtpInput = ({ length = 6, onOtpChange }) => {
     );
 };
 
-export default function Edit({ mustVerifyEmail, status }) {
+export default function Edit({ mustVerifyEmail, status, telegram_bot_username }) {
     const user = usePage().props.auth.user;
     
     // Profile Information Form
@@ -425,6 +447,50 @@ export default function Edit({ mustVerifyEmail, status }) {
                                     {recentlySuccessful && <p className="text-sm text-gray-600 dark:text-gray-400">Saved.</p>}
                                 </div>
                             </form>
+                        </section>
+                    </div>
+
+                    {/* Telegram Integration */}
+                    <div className="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                        <section className="max-w-xl">
+                            <header>
+                                <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">Telegram Integration</h2>
+                                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                                    Link your Telegram account to interact with your Hermes AI Agent via Telegram.
+                                </p>
+                            </header>
+
+                            <div className="mt-6">
+                                {user.telegram_id ? (
+                                    <div className="space-y-4">
+                                        <div className="p-4 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-lg border border-green-200 dark:border-green-800">
+                                            Your account is currently linked with Telegram account <strong>{user.telegram_username ? `@${user.telegram_username}` : `ID: ${user.telegram_id}`}</strong>.
+                                        </div>
+                                        <button 
+                                            onClick={() => {
+                                                if (confirm('Are you sure you want to unlink your Telegram account?')) {
+                                                    axios.post(route('telegram.unlink')).then(() => {
+                                                        window.location.reload();
+                                                    });
+                                                }
+                                            }}
+                                            className="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150"
+                                        >
+                                            Unlink Telegram Account
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-4">
+                                        {telegram_bot_username ? (
+                                            <TelegramLoginWidget botName={telegram_bot_username} />
+                                        ) : (
+                                            <div className="p-4 bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                                                Telegram Bot Username is not configured in the system.
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
                         </section>
                     </div>
 
