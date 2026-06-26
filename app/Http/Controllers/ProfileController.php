@@ -19,6 +19,7 @@ class ProfileController extends Controller
         return \Inertia\Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail,
             'status' => session('status'),
+            'telegram_bot_username' => env('TELEGRAM_BOT_USERNAME', ''),
         ]);
     }
 

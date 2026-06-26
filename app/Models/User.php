@@ -31,6 +31,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'district_name',
         'phone_number',
         'phone_verified_at',
+        'telegram_id',
+        'telegram_username',
     ];
 
     /**
